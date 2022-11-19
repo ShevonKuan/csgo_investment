@@ -59,7 +59,7 @@ def save_inventory(path):
 cellsytle_jscode = JsCode(
     """
 function (params) {
-        if (params.value > 0) {
+        if (params.value < 0) {
             return {
                 'color': 'white',
                 'backgroundColor': 'forestgreen'
@@ -77,7 +77,7 @@ function (params) {
 
 def main() -> None:
     st.header("CSGO 饰品投资追踪 :moneybag: :dollar: :bar_chart:")
-    st.caption("Made by Shevon")
+    st.caption("Made by Shevon & Lishuai")
     st.text("请在左侧打开库存文件")
     with st.sidebar:
         st.subheader("选择库存")
@@ -106,45 +106,95 @@ def main() -> None:
         st.subheader("投资信息")
         if len(st.session_state.inventory()) > 0:
             col = st.columns(4)
+            col2 = st.columns(4)
+            col3 = st.columns(4)
             col[0].metric(
                 "总投资额", value=f"{st.session_state.inventory.total_cost():.2f} 元"
             )
-            col[1].metric(
-                "库存理论收益(Buff计)",
-                value=f"{st.session_state.inventory.calc_buff_earn():.2f} 元",
-            )
+            col[1].metric("追踪总量", value=f"{len(st.session_state.inventory())} 件")
             col[2].metric(
-                "库存理论收益率(Buff计)",
-                value=f"{st.session_state.inventory.calc_buff_earn_rate():.2f} %",
-            )
-            col[3].metric(
-                "库存理论收益(悠悠有品计)",
-                value=f"{st.session_state.inventory.calc_youpin_earn():.2f} 元",
-            )
-            col2 = st.columns(4)
-            col2[0].metric(
-                "库存理论收益率(悠悠有品计)",
-                value=f"{st.session_state.inventory.calc_youpin_earn_rate():.2f} %",
-            )
-            col2[1].metric("追踪总量", value=f"{len(st.session_state.inventory())} 件")
-            col2[2].metric(
                 "库存价值(Buff计,含租出)",
                 value=f"{st.session_state.inventory.calc_price():.2f} 元",
             )
-            col2[3].metric(
-                "总卖出收益", value=f"{st.session_state.inventory.sell_price():.2f} 元"
+            col[3].metric(
+                "总套现", value=f"{st.session_state.inventory.sell_price():.2f} 元"
             )
-            col3 = st.columns(4)
             earn = (
                 st.session_state.inventory.calc_price()
                 + st.session_state.inventory.sell_price()
                 - st.session_state.inventory.total_cost()
             )
-            col3[0].metric("盈利(库存价值+卖出收益-总投入)", value=f"{earn:.2f} 元")
-            col3[1].metric(
+            col2[0].metric("盈利(Buff计)", value=f"{earn:.2f} 元")
+            col2[1].metric(
                 "总收益率",
                 value=f"{earn/st.session_state.inventory.total_cost()*100:.2f} %",
             )
+            yyyp_earn = (
+                st.session_state.inventory.calc_yyyp_price()
+                + st.session_state.inventory.sell_price()
+                - st.session_state.inventory.total_cost()
+            )
+            col2[2].metric("盈利(悠悠有品计)", value=f"{yyyp_earn:.2f} 元")
+            col2[3].metric(
+                "总收益率",
+                value=f"{yyyp_earn/st.session_state.inventory.total_cost()*100:.2f} %",
+            )
+            col3[0].metric(
+                "持有饰品收益(Buff计)",
+                value=f"{st.session_state.inventory.calc_price() - st.session_state.inventory.total_cost_in_inventory():.2f} 元",
+            )
+            col3[1].metric(
+                "持有饰品收益率(Buff计)",
+                value=f"{100 * (st.session_state.inventory.calc_price() - st.session_state.inventory.total_cost_in_inventory())/st.session_state.inventory.total_cost_in_inventory():.2f} %",
+            )
+            col3[2].metric(
+                "持有饰品收益(悠悠有品计)",
+                value=f"{st.session_state.inventory.calc_yyyp_price() - st.session_state.inventory.total_cost_in_inventory():.2f} 元",
+            )
+            col3[3].metric(
+                "持有饰品收益率(悠悠有品计)",
+                value=f"{100 * (st.session_state.inventory.calc_yyyp_price() - st.session_state.inventory.total_cost_in_inventory())/st.session_state.inventory.total_cost_in_inventory():.2f} %",
+            )
+
+            # col[0].metric(
+            #     "总投资额", value=f"{st.session_state.inventory.total_cost():.2f} 元"
+            # )
+            # col[1].metric(
+            #     "库存理论收益(Buff计)",
+            #     value=f"{st.session_state.inventory.calc_buff_earn():.2f} 元",
+            # )
+            # col[2].metric(
+            #     "库存理论收益率(Buff计)",
+            #     value=f"{st.session_state.inventory.calc_buff_earn_rate():.2f} %",
+            # )
+            # col[3].metric(
+            #     "库存理论收益(悠悠有品计)",
+            #     value=f"{st.session_state.inventory.calc_youpin_earn():.2f} 元",
+            # )
+            # col2 = st.columns(4)
+            # col2[0].metric(
+            #     "库存理论收益率(悠悠有品计)",
+            #     value=f"{st.session_state.inventory.calc_youpin_earn_rate():.2f} %",
+            # )
+            # col2[1].metric("追踪总量", value=f"{len(st.session_state.inventory())} 件")
+            # col2[2].metric(
+            #     "库存价值(Buff计,含租出)",
+            #     value=f"{st.session_state.inventory.calc_price():.2f} 元",
+            # )
+            # col2[3].metric(
+            #     "总套现", value=f"{st.session_state.inventory.sell_price():.2f} 元"
+            # )
+            # col3 = st.columns(4)
+            # earn = (
+            #     st.session_state.inventory.calc_price()
+            #     + st.session_state.inventory.sell_price()
+            #     - st.session_state.inventory.total_cost()
+            # )
+            # col3[0].metric("盈利(库存价值+卖出收益-总投入)", value=f"{earn:.2f} 元")
+            # col3[1].metric(
+            #     "总收益率",
+            #     value=f"{earn/st.session_state.inventory.total_cost()*100:.2f} %",
+            # )
             st.subheader("目前资金组成")
             col4 = st.columns(2)
             with col4[0]:
@@ -174,7 +224,7 @@ def main() -> None:
                 fig2 = Pie(init_opts=opts.InitOpts(theme=ThemeType.MACARONS)).add(
                     "盈利资金组成",
                     [('库存增值',st.session_state.inventory.calc_price()
-                        - st.session_state.inventory.total_cost_in_inventory(),), ('卖出收益',st.session_state.inventory.sell_price(),)],
+                        - st.session_state.inventory.total_cost_in_inventory(),), ('卖出收益',st.session_state.inventory.sell_earn(),)],
                     radius=["30%", "75%"],
                 )
                 streamlit_echarts.st_pyecharts(fig2, height="400px", key="fig2")

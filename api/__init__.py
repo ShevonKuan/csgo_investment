@@ -214,7 +214,7 @@ class Inventory:
             [
                 self()[good].price - self()[good].cost
                 for good in self()
-                if self()[good].cost != 0
+                if (self()[good].cost != 0 & self()[good].status == 0) or self()[good].status == 1
             ]
         )
 
@@ -223,15 +223,15 @@ class Inventory:
             [
                 self()[good].youpin_price - self()[good].cost
                 for good in self()
-                if self()[good].cost != 0
+                if (self()[good].cost != 0 & self()[good].status == 0) or self()[good].status == 1
             ]
         )
 
     def calc_buff_earn_rate(self):
-        return self.calc_buff_earn() / self.total_cost() * 100
+        return self.calc_buff_earn() / self.total_cost_in_inventory() * 100
 
     def calc_youpin_earn_rate(self):
-        return self.calc_youpin_earn() / self.total_cost() * 100
+        return self.calc_youpin_earn() / self.total_cost_in_inventory() * 100
 
     def calc_price(self):
         return sum(
@@ -243,10 +243,27 @@ class Inventory:
             ]
         )
 
+    def calc_yyyp_price(self):
+        return sum(
+            [
+                self()[good].youpin_price
+                for good in self()
+                if (self()[good].status == 0 and self()[good].cost != 0)
+                or self()[good].status == 1
+            ]
+        )
+
+    def sell_earn(self):
+        return sum(
+            [self()[good].sell_price for good in self() if self()[good].status == 2]
+        ) - sum(
+            [self()[good].cost for good in self() if self()[good].status == 2]
+        )
+
     def sell_price(self):
         return sum(
             [self()[good].sell_price for good in self() if self()[good].status == 2]
-        )
+        ) 
 
 
 if __name__ == "__main__":

@@ -1,2 +1,4 @@
 .pkl
 api/__pycache__
+coverage/
+.ipynb

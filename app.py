@@ -46,8 +46,12 @@ def open_inventory(path):
         st.session_state.inventory = Inventory(path)
         st.success("库存已打开 ✅")
     with st.spinner("更新饰品信息..."):
-        for i in st.session_state.inventory:
+        progress_bar = st.progress(0)
+        rate = 1 / len(st.session_state.inventory())
+        for p, i in enumerate(st.session_state.inventory):
+            progress_bar.progress(rate * p)
             st.session_state.inventory()[i].refresh()
+        progress_bar.empty()
 
 
 def save_inventory(path):

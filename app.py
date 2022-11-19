@@ -112,7 +112,6 @@ def main() -> None:
             col = st.columns(4)
             col2 = st.columns(4)
             col3 = st.columns(4)
-            st.metric
             col[0].metric(
                 "总投资额", value=f"{st.session_state.inventory.total_cost():.2f} 元",
                 help="购买饰品总花费"

@@ -1,22 +1,13 @@
-FROM alpine:3.15
-ENTRYPOINT ["python","-m","streamlit","app.py"]
+FROM python:3.9.15-slim-bullseye
+ENTRYPOINT ["streamlit","run","app.py"]
 EXPOSE 8501
 VOLUME /usr/local/csgo/data
 
 WORKDIR /usr/local/csgo
 COPY requirements.txt ./requirements.txt
 
-RUN apk upgrade --no-cache \
-    && apk add --no-cache -t \
-    py3-setuptools \
-    python3-dev \
-    openssl-dev \
-    && apk add --no-cache \
-    python3 \
-    py3-pip \
-    && pip3 install --upgrade pip wheel setuptools \
-    && pip3 install --no-cache -r requirements.txt \
-    && apk del build-dependencies \
+RUN pip install --upgrade pip   \
+    && pip install --no-cache -r requirements.txt \
     && rm -rf /root/.cache
 
 COPY api ./api
@@ -24,9 +15,8 @@ COPY app.py ./app.py
 COPY LICENSE ./LICENSE
 
 # Keep these arguments at the end to prevent redundant layer rebuilds
-ARG LABEL_DATE=
-ARG GIT_URL=unknown
-ARG SEARX_GIT_VERSION=unknown
+ARG LABEL_DATE=2022-11-20
+ARG GIT_URL=https://github.com/ShevonKuan/csgo_investment
 ARG LABEL_VCS_REF=
 ARG LABEL_VCS_URL=
 LABEL maintainer="shevonkuan <https://github.com/ShevonKuan/csgo_investment>" \

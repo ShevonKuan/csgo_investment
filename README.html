@@ -777,7 +777,7 @@ hue-6-2: #e6c07b
 <pre><code class="language-bash"><div>pip install -r requirements.txt
 </div></code></pre>
 <h1 id="quick-start">Quick Start</h1>
-<pre><code class="language-bash"><div>streamlit run ./app.py
+<pre><code class="language-bash"><div>streamlit run app.py
 </div></code></pre>
 <h1 id="docker-mode">Docker Mode</h1>
 <p>You can use docker to run this app.</p>
@@ -789,7 +789,7 @@ hue-6-2: #e6c07b
 <ol start="2">
 <li>Run the image</li>
 </ol>
-<pre><code class="language-bash"><div>docker run -p 80:8501 -v &lt;path_to_store_data&gt;:/usr/<span class="hljs-built_in">local</span>/csgo/data --restart=always shevonkuan/csgo_investment
+<pre><code class="language-bash"><div>docker run -p 80:8501 -dit -v &lt;path_to_store_data&gt;:/usr/<span class="hljs-built_in">local</span>/csgo/data --restart=always shevonkuan/csgo_investment
 </div></code></pre>
 <ol start="3">
 <li>Now you can access the app at <code>http://&lt;your_ip&gt;</code></li>

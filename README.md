@@ -6,6 +6,6 @@
 ![image](/pictures/4.jpg)
 ![image](/pictures/5.jpg)
 # 运行命令
-'''
+```python
 python -m streamlit run app.py
-'''
+```

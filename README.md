@@ -34,7 +34,7 @@ docker pull shevonkuan/csgo_investment
 ```
 2. Run the image
 ```bash
-docker run -p 80:8501 -dit -v <path_to_store_data>:/usr/local/csgo/data --restart=always shevonkuan/csgo_investment
+docker run -p 80:8501 -dit -v <path_to_store_data>:/usr/local/csgo/data --restart=always shevonkuan/csgo_investment:v1.0.1
 ```
 3. Now you can access the app at `http://<your_ip>`
 

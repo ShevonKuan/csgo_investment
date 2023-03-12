@@ -2,3 +2,5 @@
 api/__pycache__
 coverage/
 *.ipynb
+testfile.py
+.vscode/

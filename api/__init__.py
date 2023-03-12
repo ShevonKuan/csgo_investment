@@ -3,7 +3,7 @@ import requests
 import json
 import pickle
 import os
-
+import sqlite3
 
 class Goods:
     def __init__(self, goods_id, cost=0):
@@ -46,33 +46,41 @@ class Goods:
             return False
 
     def __get_youpin(self):
-        url = "https://api.youpin898.com/api/homepage/es/template/GetCsGoPagedList"
-        payload = json.dumps(
-            {
-                "listType": "30",
-                "gameId": "730",
-                "keyWords": self.name,
-                "pageIndex": 1,
-                "pageSize": 20,
-                "sortType": "0",
-                "listSortType": "2",
-            }
-        )
+        # self.name -> youpin_id
+        conn = sqlite3.connect('./crawler/youpinDB.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT Id FROM youpinItem WHERE CommodityName=?", (self.name,))
+        result = cursor.fetchone()
+        #print(result)
+        url = "https://api.youpin898.com/api/homepage/es/commodity/GetCsGoPagedList"
+
+        payload = json.dumps({
+        "hasSold": "true",
+        "haveBuZhangType": 0,
+        "listSortType": "1",
+        "listType": 10,
+        "pageIndex": 1,
+        "pageSize": 50,
+        "sortType": "1",
+        "status": "20",
+        "stickersIsSort": False,
+        "templateId": f"{result[0]}",
+        "userId": ""
+        })
         headers = {
-            'authority': 'api.youpin898.com',
-            'content-type': 'application/json;charset=UTF-8',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42',
+        'Content-Type': 'application/json'
         }
         response = requests.request("POST", url, headers=headers, data=payload).json()
-        self.youpin_id = response['Data'][0]['Id']
-        self.on_sale_count = response['Data'][0]["OnSaleCount"]  # youpin在售
-        self.on_lease_count = response['Data'][0]["OnLeaseCount"]  # youpin租出
-        self.lease_unit_price = eval(response['Data'][0]["LeaseUnitPrice"])  # youpin短租金
-        self.long_lease_unit_price = eval(
-            response['Data'][0]["LongLeaseUnitPrice"]
-        )  # youpin长租金
-        self.youpin_price = eval(response['Data'][0]["Price"])  # youpin当前价格
-        self.deposit = eval(response['Data'][0]["LeaseDeposit"])  # 押金
+        #print(response)
+        self.youpin_id = result
+        self.on_sale_count = 1 # response['Data']['CommodityList'][0]["OnSaleCount"]  # youpin在售
+        self.on_lease_count = 1 #response['Data']['CommodityList'][0]["OnLeaseCount"]  # youpin租出
+        self.lease_unit_price =1 #eval(response['Data']['CommodityList'][0]["LeaseUnitPrice"])  # youpin短租金
+        self.long_lease_unit_price = 1 #eval(
+        #    response['Data']['CommodityList'][0]["LongLeaseUnitPrice"]
+        #)  # youpin长租金
+        self.youpin_price = eval(response['Data']['CommodityList'][0]["Price"])  # youpin当前价格
+        self.deposit = 1 #eval(response['Data']['CommodityList'][0]["LeaseDeposit"])  # 押金
 
     def refresh(self):
         self.__get_buff()

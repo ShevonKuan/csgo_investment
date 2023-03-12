@@ -46,6 +46,10 @@ def open_inventory(path):
         st.session_state.inventory = Inventory(path)
         st.success("库存已打开 ✅")
     with st.spinner("更新饰品信息..."):
+        # check if len(st.session_state.inventory())==0
+        print(len(st.session_state.inventory()))
+        if len(st.session_state.inventory())==0:
+            return
         progress_bar = st.progress(0)
         rate = 1 / len(st.session_state.inventory())
         for p, i in enumerate(st.session_state.inventory):
@@ -81,7 +85,7 @@ function (params) {
 
 def main() -> None:
     st.header("CSGO 饰品投资追踪 :moneybag: :dollar: :bar_chart:")
-    st.caption("Made by Shevon & Lishuai")
+    st.caption("目前无法获取有品租金相关信息，如果您有办法获取该api，请提出issue。 Made by Shevon & Lishuai")
     st.text("请在左侧打开库存文件")
     with st.sidebar:
         st.subheader("选择库存")
@@ -103,7 +107,7 @@ def main() -> None:
                         tmp.refresh()
                         st.session_state.inventory.add(tmp)
                         st.success(tmp.name + "已添加 ✅")
-                    except:
+                    except Exception as e:
                         st.error("饰品信息加载失败，请检查代码是否正确")
 
     if 'inventory' in st.session_state:
@@ -135,7 +139,7 @@ def main() -> None:
                            help="总套现 + 库存价值 - 总投资额")
             col2[1].metric(
                 "总收益率",
-                value=f"{earn/st.session_state.inventory.total_cost()*100:.2f} %",
+                value=f"{0 if st.session_state.inventory.total_cost()==0 else earn/st.session_state.inventory.total_cost()*100:.2f} %",
                 help="盈利 / 总投资额 * 100"            
             )
             yyyp_earn = (
@@ -146,7 +150,7 @@ def main() -> None:
             col2[2].metric("盈利(悠悠有品计)", value=f"{yyyp_earn:.2f} 元")
             col2[3].metric(
                 "总收益率",
-                value=f"{yyyp_earn/st.session_state.inventory.total_cost()*100:.2f} %",
+                value=f"{0 if st.session_state.inventory.total_cost()==0 else yyyp_earn/st.session_state.inventory.total_cost()*100:.2f} %",
                 help="盈利 / 总投资额 * 100"
             )
             col3[0].metric(
@@ -156,17 +160,17 @@ def main() -> None:
             )
             col3[1].metric(
                 "持有饰品收益率(Buff计)",
-                value=f"{100 * (st.session_state.inventory.calc_price() - st.session_state.inventory.total_cost_in_inventory())/st.session_state.inventory.total_cost_in_inventory():.2f} %",
+                value=f"{0 if st.session_state.inventory.total_cost()==0 else 100 * (st.session_state.inventory.calc_price() - st.session_state.inventory.total_cost_in_inventory())/st.session_state.inventory.total_cost_in_inventory():.2f} %",
                 help="( 持有饰品收益 - 库存内和已租出饰品总花费 ) * 100"
             )
             col3[2].metric(
                 "持有饰品收益(悠悠有品计)",
-                value=f"{st.session_state.inventory.calc_yyyp_price() - st.session_state.inventory.total_cost_in_inventory():.2f} 元",
+                value=f"{0 if st.session_state.inventory.total_cost()==0 else st.session_state.inventory.calc_yyyp_price() - st.session_state.inventory.total_cost_in_inventory():.2f} 元",
                 help="库存价值 - 库存内和已租出饰品总花费"
             )
             col3[3].metric(
                 "持有饰品收益率(悠悠有品计)",
-                value=f"{100 * (st.session_state.inventory.calc_yyyp_price() - st.session_state.inventory.total_cost_in_inventory())/st.session_state.inventory.total_cost_in_inventory():.2f} %",
+                value=f"{0 if st.session_state.inventory.total_cost()==0 else 100 * (st.session_state.inventory.calc_yyyp_price() - st.session_state.inventory.total_cost_in_inventory())/st.session_state.inventory.total_cost_in_inventory():.2f} %",
                 help="( 持有饰品收益 - 库存内和已租出饰品总花费 ) * 100"
             )
 

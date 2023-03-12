@@ -111,7 +111,7 @@ func youpinCrawler(pageIndex int) *[]youpinItem {
 	req.Header.Add("accept", "application/json, text/plain, */*")
 	req.Header.Add("accept-language", "zh-HK,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6,yue-CN;q=0.5,yue-HK;q=0.4,yue;q=0.3")
 	req.Header.Add("apptype", "1")
-	req.Header.Add("authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjYTZlZTBiYzY4MzI0NTQzODI0NDkzODUyNjhiNjNhMCIsIm5hbWVpZCI6IjE2NTA4NjAiLCJJZCI6IjE2NTA4NjAiLCJ1bmlxdWVfbmFtZSI6InNoZXZvbiIsIk5hbWUiOiJzaGV2b24iLCJuYmYiOjE2Nzg1NDYwNTksImV4cCI6MTY3OTQxMDA1OSwiaXNzIjoieW91cGluODk4LmNvbSIsImF1ZCI6InVzZXIifQ.oTdRw25vO9Z5lPPhvJK6s9fGGUdVdj-Rv7aan4JrhZ8")
+	// youpin request header login status
 	req.Header.Add("cache-control", "no-cache")
 	req.Header.Add("content-type", "application/json")
 	req.Header.Add("dnt", "1")
